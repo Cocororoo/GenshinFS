@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/students/210110401/user-land-filesystem/fs/genshinfs/build",
+  "command": "/usr/bin/gcc  -I/home/students/210110401/user-land-filesystem/fs/genshinfs/./include  -D_FILE_OFFSET_BITS=64 -no-pie -g -Wall --pedantic -g -o CMakeFiles/genshinfs.dir/src/genshinfs.c.o -c /home/students/210110401/user-land-filesystem/fs/genshinfs/src/genshinfs.c",
+  "file": "/home/students/210110401/user-land-filesystem/fs/genshinfs/src/genshinfs.c"
+}
+]

@@ -1,0 +1,1 @@
+/usr/bin/gcc  -D_FILE_OFFSET_BITS=64 -no-pie -g -Wall --pedantic -g -rdynamic CMakeFiles/genshinfs.dir/src/genshinfs.c.o -o genshinfs  -lfuse /home/students/210110401/lib/libddriver.a 

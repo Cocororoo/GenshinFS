@@ -7,5 +7,7 @@
         "sfs.h": "c",
         "ddriver.h": "c",
         "errno.h": "c"
-    }
+    },
+    "cmake.configureOnOpen": false,
+    "cmake.sourceDirectory": "/home/students/210110401/user-land-filesystem/fs/demo"
 }

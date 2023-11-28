@@ -1,0 +1,3 @@
+/home/students/210110401/user-land-filesystem/fs/genshinfs/build/CMakeFiles/genshinfs.dir
+/home/students/210110401/user-land-filesystem/fs/genshinfs/build/CMakeFiles/edit_cache.dir
+/home/students/210110401/user-land-filesystem/fs/genshinfs/build/CMakeFiles/rebuild_cache.dir
