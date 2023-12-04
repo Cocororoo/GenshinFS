@@ -68,4 +68,7 @@ struct gfs_dentry* gfs_lookup(const char * path, boolean * is_find, boolean* is_
 #define GFS_DBG(fmt, ...) do { printf("GFS_DBG: " fmt, ##__VA_ARGS__); } while(0) 
 void 			   gfs_dump_inode_map();
 void 			   gfs_dump_data_map();
+void 			   gfs_dump_inode(struct gfs_inode * inode);
+void 			   gfs_dump_dentry(struct gfs_dentry * dentry);
+void 			   gfs_dump_super();
 #endif  /* _gfs_H_ */

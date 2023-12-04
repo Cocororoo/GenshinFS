@@ -42,7 +42,7 @@ struct custom_options {
 
 #define GFS_MAX_FILE_NAME       128
 #define GFS_IOS_PER_BLK         2
-#define GFS_INODE_PER_FILE      1
+#define GFS_INODE_PER_BLK      23      /* 一个block装inode个数 */
 #define GFS_DATA_PER_FILE       7
 #define GFS_DEFAULT_PERM        0777   /* 全权限打开 */
 
@@ -67,8 +67,9 @@ struct custom_options {
 #define GFS_ALL_BLKS_SZ(blks)               (blks * GFS_BLK_SZ())
 #define GFS_ASSIGN_FNAME(pgfs_dentry, _fname)   memcpy(pgfs_dentry->fname, _fname, strlen(_fname))
 
-#define GFS_INO_OFS(ino)                (gfs_super.inode_offset + ino * GFS_ALL_BLKS_SZ(GFS_INODE_PER_FILE))
-#define GFS_DATA_OFS(ino)               (gfs_super.data_offset + ino * GFS_ALL_BLKS_SZ(GFS_INODE_PER_FILE))
+#define GFS_INO_OFS(ino)                (gfs_super.inode_offset + (GFS_ROUND_DOWN(ino, GFS_INODE_PER_BLK) / GFS_INODE_PER_BLK) * GFS_BLK_SZ()\
+                                                             + (ino - GFS_ROUND_DOWN(ino, GFS_INODE_PER_BLK)) * sizeof(struct gfs_inode_d))
+#define GFS_DATA_OFS(ino)               (gfs_super.data_offset + ino * GFS_ALL_BLKS_SZ(GFS_DATA_PER_FILE))
 
 #define GFS_IS_DIR(pinode)              (pinode->dentry->ftype == GFS_DIR)
 #define GFS_IS_REG(pinode)              (pinode->dentry->ftype == GFS_REG_FILE)
@@ -84,7 +85,7 @@ struct gfs_inode
     int                ino;                           /* 在inode位图中的下标 */
     
     // 文件属性
-    int                size;                          /* 文件已占用空间 */
+    int                size;                          /* 文件已占用空间（已用数据块数量） */
     GFS_FILE_TYPE      ftype;                         /* 文件类型，目录或文件 */
     
     // 数据块索引（每个文件有x个数据块，blocks_pointer存储各数据块在data map中的下标）
