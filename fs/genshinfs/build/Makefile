@@ -153,6 +153,54 @@ src/genshinfs.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/src/genshinfs.c.s
 .PHONY : src/genshinfs.c.s
 
+src/genshinfs_debug.o: src/genshinfs_debug.c.o
+.PHONY : src/genshinfs_debug.o
+
+# target to build an object file
+src/genshinfs_debug.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/src/genshinfs_debug.c.o
+.PHONY : src/genshinfs_debug.c.o
+
+src/genshinfs_debug.i: src/genshinfs_debug.c.i
+.PHONY : src/genshinfs_debug.i
+
+# target to preprocess a source file
+src/genshinfs_debug.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/src/genshinfs_debug.c.i
+.PHONY : src/genshinfs_debug.c.i
+
+src/genshinfs_debug.s: src/genshinfs_debug.c.s
+.PHONY : src/genshinfs_debug.s
+
+# target to generate assembly for a file
+src/genshinfs_debug.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/src/genshinfs_debug.c.s
+.PHONY : src/genshinfs_debug.c.s
+
+src/genshinfs_utils.o: src/genshinfs_utils.c.o
+.PHONY : src/genshinfs_utils.o
+
+# target to build an object file
+src/genshinfs_utils.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/src/genshinfs_utils.c.o
+.PHONY : src/genshinfs_utils.c.o
+
+src/genshinfs_utils.i: src/genshinfs_utils.c.i
+.PHONY : src/genshinfs_utils.i
+
+# target to preprocess a source file
+src/genshinfs_utils.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/src/genshinfs_utils.c.i
+.PHONY : src/genshinfs_utils.c.i
+
+src/genshinfs_utils.s: src/genshinfs_utils.c.s
+.PHONY : src/genshinfs_utils.s
+
+# target to generate assembly for a file
+src/genshinfs_utils.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/src/genshinfs_utils.c.s
+.PHONY : src/genshinfs_utils.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -165,6 +213,12 @@ help:
 	@echo "... src/genshinfs.o"
 	@echo "... src/genshinfs.i"
 	@echo "... src/genshinfs.s"
+	@echo "... src/genshinfs_debug.o"
+	@echo "... src/genshinfs_debug.i"
+	@echo "... src/genshinfs_debug.s"
+	@echo "... src/genshinfs_utils.o"
+	@echo "... src/genshinfs_utils.i"
+	@echo "... src/genshinfs_utils.s"
 .PHONY : help
 
 

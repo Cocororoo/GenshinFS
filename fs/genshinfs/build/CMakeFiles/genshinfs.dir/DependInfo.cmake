@@ -9,6 +9,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/students/210110401/user-land-filesystem/fs/genshinfs/src/genshinfs.c" "CMakeFiles/genshinfs.dir/src/genshinfs.c.o" "gcc" "CMakeFiles/genshinfs.dir/src/genshinfs.c.o.d"
+  "/home/students/210110401/user-land-filesystem/fs/genshinfs/src/genshinfs_debug.c" "CMakeFiles/genshinfs.dir/src/genshinfs_debug.c.o" "gcc" "CMakeFiles/genshinfs.dir/src/genshinfs_debug.c.o.d"
+  "/home/students/210110401/user-land-filesystem/fs/genshinfs/src/genshinfs_utils.c" "CMakeFiles/genshinfs.dir/src/genshinfs_utils.c.o" "gcc" "CMakeFiles/genshinfs.dir/src/genshinfs_utils.c.o.d"
   )
 
 # Targets to which this target links.

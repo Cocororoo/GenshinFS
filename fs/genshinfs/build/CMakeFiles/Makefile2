@@ -81,12 +81,12 @@ clean: CMakeFiles/genshinfs.dir/clean
 CMakeFiles/genshinfs.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/genshinfs.dir/build.make CMakeFiles/genshinfs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/students/210110401/user-land-filesystem/fs/genshinfs/build/CMakeFiles --progress-num=1,2 "Built target genshinfs"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/students/210110401/user-land-filesystem/fs/genshinfs/build/CMakeFiles --progress-num=1,2,3,4 "Built target genshinfs"
 .PHONY : CMakeFiles/genshinfs.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/genshinfs.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/students/210110401/user-land-filesystem/fs/genshinfs/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/students/210110401/user-land-filesystem/fs/genshinfs/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/genshinfs.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/students/210110401/user-land-filesystem/fs/genshinfs/build/CMakeFiles 0
 .PHONY : CMakeFiles/genshinfs.dir/rule
