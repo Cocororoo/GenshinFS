@@ -61,7 +61,7 @@ void* gfs_init(struct fuse_conn_info * conn_info) {
  * @return void
  */
 void gfs_destroy(void* p) {
-	/* TODO: 在这里进行卸载 */
+	/* 在这里进行卸载 */
 	
 	if (gfs_umount() != GFS_ERROR_NONE) {
 		GFS_DBG("[%s] unmount error\n", __func__);
@@ -164,8 +164,22 @@ int gfs_getattr(const char* path, struct stat * gfs_stat) {
  */
 int gfs_readdir(const char * path, void * buf, fuse_fill_dir_t filler, off_t offset,
 			    		 struct fuse_file_info * fi) {
-    /* TODO: 解析路径，获取目录的Inode，并读取目录项，利用filler填充到buf，可参考/fs/simplefs/sfs.c的Gfs_readdir()函数实现 */
-    return 0;
+    /* 解析路径，获取目录的Inode，并读取目录项，利用filler填充到buf，可参考/fs/simplefs/sfs.c的Gfs_readdir()函数实现 */
+    boolean	is_find, is_root;
+	int		cur_dir = offset;
+
+	struct gfs_dentry* dentry = gfs_lookup(path, &is_find, &is_root);
+	struct gfs_dentry* sub_dentry;
+	struct sfs_inode* inode;
+	if (is_find) {
+		inode = dentry->inode;
+		sub_dentry = gfs_get_dentry(inode, cur_dir);
+		if (sub_dentry) {
+			filler(buf, sub_dentry->fname, NULL, ++offset);
+		}
+		return GFS_ERROR_NONE;
+	}
+	return -GFS_ERROR_NOTFOUND;
 }
 
 /**
@@ -177,8 +191,34 @@ int gfs_readdir(const char * path, void * buf, fuse_fill_dir_t filler, off_t off
  * @return int 0成功，否则失败
  */
 int gfs_mknod(const char* path, mode_t mode, dev_t dev) {
-	/* TODO: 解析路径，并创建相应的文件 */
-	return 0;
+	/* 解析路径，并创建相应的文件 */
+	boolean	is_find, is_root;
+	
+	struct gfs_dentry* last_dentry = gfs_lookup(path, &is_find, &is_root);
+	struct gfs_dentry* dentry;
+	struct gfs_inode* inode;
+	char* fname;
+	
+	if (is_find == TRUE) {
+		return -GFS_ERROR_EXISTS;
+	}
+
+	fname = gfs_get_fname(path);
+	
+	if (S_ISREG(mode)) {
+		dentry = new_dentry(fname, GFS_REG_FILE);
+	}
+	else if (S_ISDIR(mode)) {
+		dentry = new_dentry(fname, GFS_DIR);
+	}
+	else {
+		dentry = new_dentry(fname, GFS_REG_FILE);
+	}
+	dentry->parent = last_dentry;
+	inode = gfs_alloc_inode(dentry);
+	gfs_alloc_dentry(last_dentry->inode, dentry);
+
+	return GFS_ERROR_NONE;
 }
 
 /**

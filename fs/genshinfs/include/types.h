@@ -87,7 +87,7 @@ struct gfs_inode
     int                size;                          /* 文件已占用空间 */
     GFS_FILE_TYPE      ftype;                         /* 文件类型，目录或文件 */
     
-    // 数据块索引（每个文件有x个数据块）
+    // 数据块索引（每个文件有x个数据块，blocks_pointer存储各数据块在data map中的下标）
     int                blocks_pointer[GFS_DATA_PER_FILE];
 
     // 如果是目录类型，下有几个目录项

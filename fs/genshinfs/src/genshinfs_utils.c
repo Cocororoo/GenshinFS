@@ -4,6 +4,39 @@ extern struct gfs_super      gfs_super;
 extern struct custom_options gfs_options;
 
 /**
+ * @brief 
+ * 
+ * @param inode 
+ * @param dir [0...]
+ * @return struct gfs_dentry* 
+ */
+struct gfs_dentry* gfs_get_dentry(struct gfs_inode * inode, int dir) {
+    struct gfs_dentry* dentry_cursor = inode->dentrys;
+    int    cnt = 0;
+    while (dentry_cursor)
+    {
+        if (dir == cnt) {
+            return dentry_cursor;
+        }
+        cnt++;
+        dentry_cursor = dentry_cursor->brother;
+    }
+    return NULL;
+}
+
+/**
+ * @brief 获取文件名
+ * 
+ * @param path 
+ * @return char* 
+ */
+char* gfs_get_fname(const char* path) {
+    char ch = '/';
+    char *q = strrchr(path, ch) + 1;
+    return q;
+}
+
+/**
  * @brief 计算路径的层级
  * exm: /av/c/d/f
  * -> lvl = 4
@@ -239,8 +272,16 @@ int gfs_sync_inode(struct gfs_inode * inode) {
     inode_d.dir_cnt     = inode->dir_cnt;
     int offset;
     
+    // 写入inode map
     if (gfs_driver_write(GFS_INO_OFS(ino), (uint8_t *)&inode_d, 
                      sizeof(struct gfs_inode_d)) != GFS_ERROR_NONE) {
+        GFS_DBG("[%s] io error\n", __func__);
+        return -GFS_ERROR_IO;
+    }
+
+    // 写入data map
+    if  (gfs_driver_write(GFS_DATA_OFS(ino), (uint8_t *)&inode_d,
+                            sizeof(struct gfs_inode_d)) != GFS_ERROR_NONE) {
         GFS_DBG("[%s] io error\n", __func__);
         return -GFS_ERROR_IO;
     }
@@ -460,4 +501,50 @@ int gfs_mount(struct custom_options options){
     gfs_dump_inode_map();
     gfs_dump_data_map();
     return ret;
+}
+
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
+int gfs_umount() {
+    struct gfs_super_d  gfs_super_d; 
+
+    if (!gfs_super.is_mounted) {
+        return GFS_ERROR_NONE;
+    }
+
+    gfs_sync_inode(gfs_super.root_dentry->inode);     /* 从根节点向下刷写节点 */
+                                                    
+    gfs_super_d.magic_num           = GFS_MAGIC_NUM;
+    gfs_super_d.block_size          = gfs_super.block_size;
+    gfs_super_d.usage               = gfs_super.usage;
+    
+    gfs_super_d.map_inode_blks      = gfs_super.map_inode_blks;
+    gfs_super_d.map_inode_offset    = gfs_super.map_inode_offset;
+    gfs_super_d.map_data_blks       = gfs_super.map_data_blks;
+    gfs_super_d.map_data_offset     = gfs_super.map_data_offset;
+
+    gfs_super_d.inode_offset        = gfs_super.inode_offset;
+    gfs_super_d.inode_blks          = gfs_super.inode_blks;
+    gfs_super_d.data_offset         = gfs_super.data_offset;
+
+    gfs_super_d.inode_max_num       = gfs_super.inode_max_num;
+    gfs_super_d.data_max_num        = gfs_super.data_max_num;
+
+    if (gfs_driver_write(GFS_SUPER_OFS, (uint8_t *)&gfs_super_d, 
+                     sizeof(struct gfs_super_d)) != GFS_ERROR_NONE) {
+        return -GFS_ERROR_IO;
+    }
+
+    if (gfs_driver_write(gfs_super_d.map_inode_offset, (uint8_t *)(gfs_super.map_inode), 
+                         GFS_ALL_BLKS_SZ(gfs_super_d.map_inode_blks)) != GFS_ERROR_NONE) {
+        return -GFS_ERROR_IO;
+    }
+
+    free(gfs_super.map_inode);
+    ddriver_close(GFS_DRIVER());
+
+    return GFS_ERROR_NONE;
 }
