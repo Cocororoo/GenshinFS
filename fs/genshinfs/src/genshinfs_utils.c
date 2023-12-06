@@ -278,14 +278,14 @@ int gfs_sync_inode(struct gfs_inode * inode) {
     }
     int offset;
     
-    // 写入inode map
+    // 写入inode
     if (gfs_driver_write(GFS_INO_OFS(ino), (uint8_t *)&inode_d, 
                      sizeof(struct gfs_inode_d)) != GFS_ERROR_NONE) {
         GFS_DBG("[%s] io error\n", __func__);
         return -GFS_ERROR_IO;
     }
 
-    // 写入data map
+    // 写入data
     if  (gfs_driver_write(GFS_DATA_OFS(ino), (uint8_t *)&inode_d,
                             sizeof(struct gfs_inode_d)) != GFS_ERROR_NONE) {
         GFS_DBG("[%s] io error\n", __func__);
@@ -437,7 +437,7 @@ struct gfs_inode* gfs_read_inode(struct gfs_dentry * dentry, int ino) {
  * 
  * BLK_SZ = 2 * IO_SZ
  * 
- * 每8个Inode占用一个Blk
+ * 每23个Inode占用一个Blk
  * @param options 
  * @return int 
  */
@@ -508,8 +508,7 @@ int gfs_mount(struct custom_options options){
         gfs_super_d.map_data_blks   = map_data_blks;
         gfs_super_d.usage    = 0;
         is_init = TRUE;
-    }
-    gfs_super.usage   = gfs_super_d.usage;      
+    }  
     /* 建立 in-memory 结构 */
     
     gfs_super.block_size = gfs_super_d.block_size;
@@ -614,8 +613,5 @@ int gfs_umount() {
     free(gfs_super.map_inode);
     ddriver_close(GFS_DRIVER());
 
-    // gfs_dump_inode_map();
-    // gfs_dump_data_map();
-    // gfs_dump_super();
     return GFS_ERROR_NONE;
 }

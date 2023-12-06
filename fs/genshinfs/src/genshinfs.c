@@ -170,7 +170,7 @@ int gfs_readdir(const char * path, void * buf, fuse_fill_dir_t filler, off_t off
 
 	struct gfs_dentry* dentry = gfs_lookup(path, &is_find, &is_root);
 	struct gfs_dentry* sub_dentry;
-	struct sfs_inode* inode;
+	struct gfs_inode* inode;
 	if (is_find) {
 		inode = dentry->inode;
 		sub_dentry = gfs_get_dentry(inode, cur_dir);
@@ -248,6 +248,27 @@ int gfs_utimens(const char* path, const struct timespec tv[2]) {
 int gfs_write(const char* path, const char* buf, size_t size, off_t offset,
 		        struct fuse_file_info* fi) {
 	/* 选做 */
+	boolean	is_find, is_root;
+	struct gfs_dentry* dentry = gfs_lookup(path, &is_find, &is_root);
+	struct gfs_inode*  inode;
+	
+	if (is_find == FALSE) {
+		return -GFS_ERROR_NOTFOUND;
+	}
+
+	inode = dentry->inode;
+	
+	if (GFS_IS_DIR(inode)) {
+		return -GFS_ERROR_ISDIR;	
+	}
+
+	if (inode->size < offset) {
+		return -GFS_ERROR_SEEK;
+	}
+
+	memcpy(inode->data + offset, buf, size);
+	inode->size = offset + size > inode->size ? offset + size : inode->size;
+	
 	return size;
 }
 
@@ -264,7 +285,27 @@ int gfs_write(const char* path, const char* buf, size_t size, off_t offset,
 int gfs_read(const char* path, char* buf, size_t size, off_t offset,
 		       struct fuse_file_info* fi) {
 	/* 选做 */
-	return size;			   
+	boolean	is_find, is_root;
+	struct gfs_dentry* dentry = gfs_lookup(path, &is_find, &is_root);
+	struct gfs_inode*  inode;
+
+	if (is_find == FALSE) {
+		return -GFS_ERROR_NOTFOUND;
+	}
+
+	inode = dentry->inode;
+	
+	if (GFS_IS_DIR(inode)) {
+		return -GFS_ERROR_ISDIR;	
+	}
+
+	if (inode->size < offset) {
+		return -GFS_ERROR_SEEK;
+	}
+
+	memcpy(buf, inode->data + offset, size);
+
+	return size;				   
 }
 
 /**
@@ -369,7 +410,7 @@ int main(int argc, char **argv)
     int ret;
 	struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
 
-	gfs_options.device = strdup("TODO: 这里填写你的ddriver设备路径");
+	gfs_options.device = strdup("/dev/ddriver");
 
 	if (fuse_opt_parse(&args, &gfs_options, option_spec, NULL) == -1)
 		return -1;
